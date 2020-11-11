@@ -7,7 +7,7 @@ def nthRootsOfUnity(n):
     return np.exp(2j * np.pi / n * np.arange(n))
 
 
-N = 36
+N = 1024
 
 Fs = [
     # lambda x: 1,
@@ -22,7 +22,8 @@ Fs = [
     # lambda x: np.sqrt(3) if x % 3 == 0 else 0,
     # lambda x: np.sqrt(3) if x % 3 == 1 else 0,
     # lambda x: np.sqrt(3) if x % 3 == 2 else 0,
-    lambda x: 2 if x % 4 == 1 else 0,
+    # lambda x: 2 if x % 4 == 1 else 0,
+    lambda x: (33 ** x) % 91,
 ]
 
 if __name__ == '__main__':
@@ -34,17 +35,17 @@ if __name__ == '__main__':
             DFT_N[i][j] = roots[(i * j) % N]
     DFT_N /= np.sqrt(N)
 
-    # print(np.round(DFT_N, 5))
+    # print(np.sum(DFT_N.conj().transpose() @ DFT_N))
 
     for F in Fs:
         F_kat = np.asarray([F(x) for x in range(N)]).reshape((N, 1)) / np.sqrt(N)
 
-        print(F_kat)
+        # print(F_kat)
         print(np.linalg.norm(F_kat))
 
         res = DFT_N @ F_kat
 
-        print(res)
+        # print(res)
 
         plt.plot(np.arange(N), np.sqrt(res.conj() * res), marker='o')
         plt.show()
