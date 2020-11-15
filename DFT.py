@@ -7,7 +7,7 @@ def nthRootsOfUnity(n):
     return np.exp(2j * np.pi / n * np.arange(n))
 
 
-N = 1024
+N = 16
 
 Fs = [
     # lambda x: 1,
@@ -32,10 +32,10 @@ if __name__ == '__main__':
     DFT_N = np.ones((N, N), dtype=np.complex128)
     for i in range(N):
         for j in range(N):
-            DFT_N[i][j] = roots[(i * j) % N]
+            DFT_N[i][j] = roots[-(i * j) % N]
     DFT_N /= np.sqrt(N)
 
-    # print(np.sum(DFT_N.conj().transpose() @ DFT_N))
+    print(DFT_N)
 
     for F in Fs:
         F_kat = np.asarray([F(x) for x in range(N)]).reshape((N, 1)) / np.sqrt(N)
@@ -49,3 +49,6 @@ if __name__ == '__main__':
 
         plt.plot(np.arange(N), np.sqrt(res.conj() * res), marker='o')
         plt.show()
+
+        fmtcomplex = np.vectorize(lambda x: '{},{}'.format(x.real, x.imag))
+        np.savetxt('DFT16.csv', fmtcomplex(DFT_N), delimiter=',', fmt='%s')
